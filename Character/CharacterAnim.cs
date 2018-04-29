@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class CharacterAnim : MonoBehaviour 
 {
+	public Rigidbody RB;
+
 	public Animator Anim;
 	public bool Run = false;
 	public bool Walk = false;
 	public bool Idle = false;
 
 	private List<string> Animations = new List<string> ();
+	private string LastAnim = "";
 
 	public void AddAnimation(string name)
 	{
@@ -18,11 +21,17 @@ public class CharacterAnim : MonoBehaviour
 
 	public void SetAnimation(string name)
 	{
+		if (this.LastAnim == name)
+		{
+			return;
+		}
+
 		for (int i=0; i<this.Animations.Count; i++) 
 		{
 			if (this.Animations[i] == name)
 			{
 				this.Anim.SetBool(this.Animations[i], true);
+				this.LastAnim = name;
 			}
 			else
 			{
@@ -34,31 +43,31 @@ public class CharacterAnim : MonoBehaviour
 	void Start() 
 	{
 		this.SetupAnimations();
+		this.RB = this.GetComponent<Rigidbody>();
 	}
 
 	void SetupAnimations()
 	{
 		AddAnimation("Idle");
 		AddAnimation("Walk");
-		AddAnimation("Run");
+		AddAnimation("Jog");
 	}
 
 	void Update() 
 	{
-		if (this.Run) 
+		Vector3 velocity = this.RB.velocity;
+		float speed = velocity.magnitude;
+		if (speed > 5)
 		{
 			this.SetAnimation("Run");
-			this.Run = false;
 		}
-		else if (this.Walk) 
+		else if (speed > 0.01f)
 		{
 			this.SetAnimation("Walk");
-			this.Walk = false;
 		}
-		else if (this.Idle) 
+		else
 		{
 			this.SetAnimation("Idle");
-			this.Idle = false;
 		}
 	}
 }
