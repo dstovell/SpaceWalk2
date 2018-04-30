@@ -37,8 +37,7 @@ namespace ZeroG
 		{
 			this.MoveStick = new Vector2( this.GetAxis(MoveStickNameX), this.GetAxis(MoveStickNameY) );
 			this.LookStick = new Vector2( this.GetAxis(LookStickNameX), this.GetAxis(LookStickNameY) );
-			bool jump = Input.GetButtonDown("Jump");
-			this.Jump = this.Jump ? true : jump;
+			this.Jump = Input.GetButton("Jump");
 		}
 	}
 }

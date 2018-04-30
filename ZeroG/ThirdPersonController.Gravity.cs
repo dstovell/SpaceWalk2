@@ -9,6 +9,8 @@ namespace ZeroG
 	{
 		public Vector3 Gravity;
 
+		private float GravityRotateSpeed = 20f;
+
 		public enum GroundState
 		{
 			None,
@@ -57,7 +59,7 @@ namespace ZeroG
 			}
 		}
 
-		void UpdateGravity()
+		void UpdateGravity(float deltaTime)
 		{
 			if (this.IsFloating())
 			{
@@ -72,7 +74,11 @@ namespace ZeroG
 				}
 			}
 
-			this.transform.up = -1f*this.Gravity;
+			//this.transform.up = -1f*this.Gravity;
+
+			this.transform.up = Vector3.RotateTowards(this.transform.up, -1f*this.Gravity, deltaTime*this.GravityRotateSpeed, 0.0f);
+
+
 
 			this.SinceGravity++;
 		}

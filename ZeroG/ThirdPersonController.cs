@@ -8,7 +8,7 @@ namespace ZeroG
 	{
 		public float RotateSpeed = 100;
 		public float MoveSpeed = 8;
-		public float JumpForce = 10;
+		private float ForceAmount = 50;
 
 		public Rigidbody RB;
 		public ThirdPersonInput Input;
@@ -82,14 +82,13 @@ namespace ZeroG
 
 		void FixedUpdate()
 		{
-			this.UpdateGravity();
+			this.UpdateGravity(Time.fixedDeltaTime);
 
 			if (this.Input != null)
 			{
 				if (this.Input.Jump)
 				{
-					this.RB.AddForce(this.transform.up * this.JumpForce);
-					this.Input.Jump = false;
+					this.RB.AddForce(this.transform.up * this.ForceAmount, ForceMode.Acceleration);
 				}
 
 				//Quaternion to = Quaternion.AngleAxis(this.Input.MoveStick.x, this.transform.up);
