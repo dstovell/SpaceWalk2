@@ -14,6 +14,8 @@ public class CharacterAnim : MonoBehaviour
 	private List<string> Animations = new List<string> ();
 	private string LastAnim = "";
 
+	public ZeroG.ThirdPersonController Controller;
+
 	public void AddAnimation(string name)
 	{
 		this.Animations.Add(name);
@@ -55,17 +57,20 @@ public class CharacterAnim : MonoBehaviour
 
 	void Update() 
 	{
-		Vector3 velocity = this.RB.velocity;
-		float speed = velocity.magnitude;
-		if (speed > 5)
+		if (this.Controller == null)
+		{
+			return;
+		}
+
+		if (this.Controller.IsRunning())
 		{
 			this.SetAnimation("Run");
 		}
-		else if (speed > 0.01f)
+		else if (this.Controller.IsWalking())
 		{
 			this.SetAnimation("Walk");
 		}
-		else
+		else if (this.Controller.IsIdle())
 		{
 			this.SetAnimation("Idle");
 		}

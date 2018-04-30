@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace ZeroG
 {
-	public class ThirdPersonController : MonoBehaviour 
+	public partial class ThirdPersonController : MonoBehaviour 
 	{
 		public float RotateSpeed = 100;
 		public float MoveSpeed = 8;
+		public float JumpForce = 10;
 
 		public Rigidbody RB;
 		public ThirdPersonInput Input;
@@ -16,6 +17,8 @@ namespace ZeroG
 		{
 			this.RB = this.GetComponent<Rigidbody>();
 			this.Input = this.GetComponent<ThirdPersonInput>();
+
+			this.InitGravity();
 		}
 
 		public void Move(float inputAmount, float deltaTime)
@@ -42,24 +45,60 @@ namespace ZeroG
 			this.RB.velocity = Vector3.zero;
 		}
 
+		public bool IsIdle()
+		{
+			return (this.RB.velocity.magnitude < 0.1f);
+		}
+
+		public bool IsWalking()
+		{
+			return (this.RB.velocity.magnitude > 0.1f);
+		}
+
+		public bool IsRunning()
+		{
+			return false;
+		}
+
+		public bool IsFloating()
+		{
+			return (this.Ground == GroundState.None);
+		}
+
+		public bool IsFalling()
+		{
+			return (this.Ground == GroundState.Falling);
+		}
+
+		public bool IsThrusting()
+		{
+			return false;
+		}
+
+		public bool IsOnGround()
+		{
+			return (this.Ground == GroundState.Grounded);
+		}
+
 		void FixedUpdate()
 		{
+			this.UpdateGravity();
+
 			if (this.Input != null)
 			{
-				if (this.Input.ActiveInput)
+				if (this.Input.Jump)
 				{
-					//Quaternion to = Quaternion.AngleAxis(this.Input.MoveStick.x, this.transform.up);
-
-					//this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, to, this.RotateSpeed);
-
-					//this.transform.Rotate(this.transform.up, this.RotateSpeed*this.Input.MoveStick.x);
-
-					this.Move(this.Input.MoveStick.y, Time.fixedDeltaTime);
+					this.RB.AddForce(this.transform.up * this.JumpForce);
+					this.Input.Jump = false;
 				}
-				else
-				{
-					//Stop();
-				}
+
+				//Quaternion to = Quaternion.AngleAxis(this.Input.MoveStick.x, this.transform.up);
+
+				//this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, to, this.RotateSpeed);
+
+				//this.transform.Rotate(this.transform.up, this.RotateSpeed*this.Input.MoveStick.x);
+
+				this.Move(this.Input.MoveStick.y, Time.fixedDeltaTime);
 			}
 		}
 	}

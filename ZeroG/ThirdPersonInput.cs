@@ -13,9 +13,11 @@ namespace ZeroG
 		public string LookStickNameX = "HorizontalRS";
 		public string LookStickNameY = "VerticalRS";
 
-		public bool ActiveInput = false;
 		public Vector2 MoveStick;
 		public Vector2 LookStick;
+
+		public bool Jump;
+		public bool Fire;
 
 		private float GetAxis(string name) 
 		{
@@ -35,8 +37,8 @@ namespace ZeroG
 		{
 			this.MoveStick = new Vector2( this.GetAxis(MoveStickNameX), this.GetAxis(MoveStickNameY) );
 			this.LookStick = new Vector2( this.GetAxis(LookStickNameX), this.GetAxis(LookStickNameY) );
-
-			this.ActiveInput = true;//(this.MoveStick.Equals(Vector3.zero) || this.LookStick.Equals(Vector3.zero));
+			bool jump = Input.GetButtonDown("Jump");
+			this.Jump = this.Jump ? true : jump;
 		}
 	}
 }
